@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Parser</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Website Parser</h1>
+            <div class="url-display" id="currentUrl">Loading current URL...</div>
+        </div>
+        
+        <div class="controls">
+            <button id="parseBtn" class="parse-button">
+                <span class="button-text">Parse Current Website</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
+        </div>
+        
+        <div class="status" id="status"></div>
+        
+        <div class="result-container" id="resultContainer">
+            <div class="result-header">
+                <h3>📄 Parsed Content</h3>
+                <div class="result-info" id="resultInfo"></div>
+            </div>
+            <div class="result-content" id="resultContent"></div>
+        </div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>

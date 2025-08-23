@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Website Parser Extension",
+    "version": "1.0",
+    "description": "Parse current website content using Playwright",
+    "permissions": [
+        "activeTab",
+        "tabs"
+    ],
+    "host_permissions": [
+        "http://localhost:3000/*"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Parse Website"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ]
+}
