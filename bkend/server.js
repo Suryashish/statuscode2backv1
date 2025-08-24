@@ -139,9 +139,9 @@ app.post('/parse-website', async (req, res) => {
         const textContent = await playwright_function(url);
         
         console.log('✅ Successfully parsed website');
-        await axios.post(`${API_BASE_URL}/ingest-documents`);
-        context = await axios.post(`${API_BASE_URL}/query`);
-        
+        // await axios.post(`${API_BASE_URL}/ingest-documents`);
+        // context = await axios.post(`${API_BASE_URL}/query`);
+        context = textContent;
         res.json({ 
             success: true, 
             content: textContent,
@@ -160,7 +160,7 @@ app.post('/parse-website', async (req, res) => {
 
 app.get('/get-context', (req, res) => {
     console.log('📥 Received request to /get-context');
-    res.status(200).json(context.data);
+    res.status(200).json(context);
 });
 
 
@@ -169,12 +169,12 @@ app.get('/get-context', (req, res) => {
 app.post('/llm-call',async(req,res)=>{
   const { query } = req.body;
 
-  if (!context.data || !query) {
+  if (!context || !query) {
     return res.status(400).json({ error: "Context and query are required." });
   }
 
   try {
-    const prompt = `Context:\n${context.data}\n\nQuestion: ${query}\n\nAnswer:`
+    const prompt = `Context:\n${context}\n\nQuestion: ${query}\n\nAnswer:`
     // Call the LLM with the context and query
     const answer = await generateText(prompt);
 

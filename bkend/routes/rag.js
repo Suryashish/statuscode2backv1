@@ -80,7 +80,7 @@ router.post("/ingest-documents", async (req, res) => {
 // Query RAG endpoint
 router.post("/query", async (req, res) => {
   // const { query } = req.body;
-  query = "Give the complete details of the current product present here precisely.";
+  query = "Provide all medical-related details of this product, including composition, health benefits, risks, and usage warnings.";
 
   if (!query) {
     return res.status(400).json({ error: "Query is required." });
@@ -91,7 +91,7 @@ router.post("/query", async (req, res) => {
     const queryEmbedding = await generateEmbedding(query);
 
     // 2. Query Pinecone for relevant document chunks
-    const relevantChunks = await queryPinecone(queryEmbedding, 2); // Get top 3 relevant chunks
+    const relevantChunks = await queryPinecone(queryEmbedding, 100); // Get top 3 relevant chunks
 
     if (relevantChunks.length === 0) {
       return res
