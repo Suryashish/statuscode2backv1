@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Website Parser Extension",
-    "version": "1.0",
-    "description": "Parse current website content using Playwright",
+    "name": "HealthWise - Smart Food Analyzer",
+    "version": "2.0",
+    "description": "AI-powered food analysis for health-conscious individuals",
     "permissions": [
         "activeTab",
         "tabs"
@@ -12,7 +12,7 @@
     ],
     "action": {
         "default_popup": "popup.html",
-        "default_title": "Parse Website"
+        "default_title": "Analyze Food Product"
     },
     "content_scripts": [
         {

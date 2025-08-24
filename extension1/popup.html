@@ -3,34 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Parser</title>
+    <title>HealthWise - Smart Food Analyzer</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔍 Website Parser</h1>
-            <div class="url-display" id="currentUrl">Loading current URL...</div>
-        </div>
-        
-        <div class="controls">
-            <button id="parseBtn" class="parse-button">
-                <span class="button-text">Parse Current Website</span>
-                <div class="spinner" id="spinner"></div>
-            </button>
-        </div>
-        
-        <div class="status" id="status"></div>
-        
-        <div class="result-container" id="resultContainer">
-            <div class="result-header">
-                <h3>📄 Parsed Content</h3>
-                <div class="result-info" id="resultInfo"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🍃</div>
+                <div class="logo-text">
+                    <span class="brand">HealthWise</span>
+                    <span class="tagline">Smart Food Analysis</span>
+                </div>
             </div>
-            <div class="result-content" id="resultContent"></div>
-        </div>
+            <div class="connection-status" id="connectionStatus">
+                <div class="status-dot"></div>
+                <span>Connecting...</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- URL Display Card -->
+            <div class="card url-card">
+                <div class="card-header">
+                    <h3>🌐 Current Page</h3>
+                </div>
+                <div class="url-display" id="currentUrl">Loading...</div>
+            </div>
+
+            <!-- Analyze Button -->
+            <div class="analyze-section">
+                <button id="analyzeBtn" class="analyze-button">
+                    <div class="button-content">
+                        <span class="button-icon">🔬</span>
+                        <span class="button-text">Analyze Product</span>
+                        <div class="spinner" id="spinner"></div>
+                    </div>
+                </button>
+                <p class="analyze-hint">Get comprehensive health insights</p>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-container" id="loadingContainer" style="display: none;">
+                <div class="loading-card">
+                    <div class="loading-animation">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-ring delay-1"></div>
+                        <div class="pulse-ring delay-2"></div>
+                    </div>
+                    <h3>Analyzing Product</h3>
+                    <p id="loadingText">Processing ingredients...</p>
+                </div>
+            </div>
+
+            <!-- Results Container -->
+            <div class="results-container" id="resultsContainer" style="display: none;">
+                
+                <!-- Food Preference Card -->
+                <div class="card result-card">
+                    <div class="card-header">
+                        <h3>🥘 Food Category</h3>
+                    </div>
+                    <div class="food-preference" id="foodPreference">
+                        <div class="preference-badge" id="preferenceBadge">
+                            <span class="preference-text">Loading...</span>
+                        </div>
+                        <p class="preference-description" id="preferenceDescription"></p>
+                    </div>
+                </div>
+
+                <!-- Health Grade Card -->
+                <div class="card result-card">
+                    <div class="card-header">
+                        <h3>📊 Health Grade</h3>
+                    </div>
+                    <div class="health-grade" id="healthGrade">
+                        <div class="grade-circle" id="gradeCircle">
+                            <span class="grade-letter" id="gradeLetter">-</span>
+                        </div>
+                        <div class="grade-details">
+                            <h4 id="gradeTitle">Analyzing...</h4>
+                            <p id="gradeDescription">Please wait...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Meter Card -->
+                <div class="card result-card">
+                    <div class="card-header">
+                        <h3>⚠️ Risk Assessment</h3>
+                    </div>
+                    <div class="risk-meter-container">
+                        <div class="risk-meter" id="riskMeter">
+                            <div class="meter-arc"></div>
+                            <div class="meter-needle" id="meterNeedle"></div>
+                            <div class="meter-center"></div>
+                        </div>
+                        <div class="risk-labels">
+                            <span class="risk-low">Low</span>
+                            <span class="risk-medium">Medium</span>
+                            <span class="risk-high">High</span>
+                        </div>
+                        <div class="risk-description" id="riskDescription">Calculating risk...</div>
+                    </div>
+                </div>
+
+                <!-- Allergen Alerts -->
+                <div class="card result-card" id="allergenCard" style="display: none;">
+                    <div class="card-header">
+                        <h3>🚨 Allergen Alerts</h3>
+                    </div>
+                    <div class="allergen-alerts" id="allergenAlerts">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Nutrition Facts -->
+                <div class="card result-card">
+                    <div class="card-header">
+                        <h3>📈 Nutrition Facts</h3>
+                    </div>
+                    <div class="nutrition-table" id="nutritionTable">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Nutrition Charts -->
+                <div class="card result-card">
+                    <div class="card-header">
+                        <h3>📊 Nutritional Breakdown</h3>
+                    </div>
+                    <div class="nutrition-charts" id="nutritionCharts">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Status Messages -->
+            <div class="status-message" id="statusMessage"></div>
+        </main>
     </div>
-    
+
     <script src="popup.js"></script>
 </body>
 </html>
