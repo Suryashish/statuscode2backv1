@@ -8,11 +8,19 @@ const axios = require('axios');
 const app = express();
 const PORT = 3000;
 
+let context = '';
+
 const API_BASE_URL = 'http://localhost:3000';
 // Middleware
 app.use(cors());
 app.use(express.json());
 require('dotenv').config();
+
+const {
+  generateEmbedding,
+  generateText,
+} = require("./services/geminiService");
+
 
 // Create documents directory if it doesn't exist
 const documentsDir = path.join(__dirname, 'documents');
@@ -132,6 +140,8 @@ app.post('/parse-website', async (req, res) => {
         
         console.log('✅ Successfully parsed website');
         await axios.post(`${API_BASE_URL}/ingest-documents`);
+        context = await axios.post(`${API_BASE_URL}/query`);
+        
         res.json({ 
             success: true, 
             content: textContent,
@@ -148,6 +158,32 @@ app.post('/parse-website', async (req, res) => {
     }
 });
 
+app.get('/get-context', (req, res) => {
+    console.log('📥 Received request to /get-context');
+    res.status(200).json(context.data);
+});
+
+
+
+
+app.post('/llm-call',async(req,res)=>{
+  const { query } = req.body;
+
+  if (!context.data || !query) {
+    return res.status(400).json({ error: "Context and query are required." });
+  }
+
+  try {
+    const prompt = `Context:\n${context.data}\n\nQuestion: ${query}\n\nAnswer:`
+    // Call the LLM with the context and query
+    const answer = await generateText(prompt);
+
+    res.status(200).json({ answer });
+  } catch (error) {
+    console.error("Error during LLM call:", error);
+    res.status(500).json({ error: "Failed to call LLM." });
+  }
+});
 // Health check endpoint
 app.get('/health', (req, res) => {
     console.log('📊 Health check requested');

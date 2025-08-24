@@ -11,6 +11,8 @@ const {
 const { processDocument } = require("../utils/documentProcessor");
 // const { playwright_function } = require("../services/play_write");
 
+const API_BASE_URL = 'http://localhost:3000';
+
 router.get("/", (req, res) => {
   res.send("RAG Server is running!");
 })
@@ -56,10 +58,29 @@ router.post("/ingest-documents", async (req, res) => {
   }
 });
 
+// router.get("/get-context",async(req,res)=>{
+//   // 1. Generate embedding for the user query
+//     const queryEmbedding = await generateEmbedding(query);
+
+//     // 2. Query Pinecone for relevant document chunks
+//     const relevantChunks = await queryPinecone(queryEmbedding, 2); // Get top 3 relevant chunks
+
+//     if (relevantChunks.length === 0) {
+//       return res
+//         .status(200)
+//         .json({
+//           answer:
+//             "I couldn't find any relevant information in my knowledge base for your query.",
+//         });
+//     }
+
+//     const context = relevantChunks.map((chunk) => chunk.text).join("\n\n");
+//     res.status(200).json({ context })
+// })
 // Query RAG endpoint
 router.post("/query", async (req, res) => {
-  const { query } = req.body;
-  // query = ["Is ${product} is healthy for user"]
+  // const { query } = req.body;
+  query = "Give the complete details of the current product present here precisely.";
 
   if (!query) {
     return res.status(400).json({ error: "Query is required." });
@@ -70,7 +91,7 @@ router.post("/query", async (req, res) => {
     const queryEmbedding = await generateEmbedding(query);
 
     // 2. Query Pinecone for relevant document chunks
-    const relevantChunks = await queryPinecone(queryEmbedding, 1); // Get top 3 relevant chunks
+    const relevantChunks = await queryPinecone(queryEmbedding, 2); // Get top 3 relevant chunks
 
     if (relevantChunks.length === 0) {
       return res
@@ -88,17 +109,23 @@ router.post("/query", async (req, res) => {
     // If the information is not in the context, state that you don't know.\n\nContext:\n${context}\n\nQuestion: ${query}\n\nAnswer:`;
 
         const context = relevantChunks.map((chunk) => chunk.text).join("\n\n");
-        const prompt = `Give a score between A- B based on the health score and healthy factor of the product. \n\nContext:\n${context}\n\n\nAnswer:`;
+        // const prompt = `Give a score between A- B based on the health score and healthy factor of the product. \n\nContext:\n${context}\n\n\nAnswer:`;
 
 
     // 4. Generate answer using Gemini
-    const answer = await generateText(prompt);
+    // const answer = await generateText(prompt);
 
-    res.status(200).json({ answer, source_chunks: relevantChunks });
+    // res.status(200).json({ answer, source_chunks: relevantChunks });
+    res.status(200).json({ context, source_chunks: relevantChunks });
   } catch (error) {
     console.error("Error during RAG query:", error);
     res.status(500).json({ error: "Failed to process query." });
   }
 });
+
+
+
+
+
 
 module.exports = router;
