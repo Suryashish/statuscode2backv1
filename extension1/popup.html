@@ -31,9 +31,9 @@
             <!-- URL Display Card -->
             <div class="card url-card">
                 <div class="card-header">
-                    <h3>🌐 Current Page</h3>
+                    <!-- <h3>🌐 Current Page</h3> -->
                 </div>
-                <div class="url-display" id="currentUrl">Loading...</div>
+                <div class="url-display" id="currentUrl"></div>
             </div>
 
             <!-- Analyze Button -->
@@ -63,6 +63,18 @@
 
             <!-- Results Container -->
             <div class="results-container" id="resultsContainer" style="display: none;">
+                
+
+                <!-- Allergen Alerts -->
+                <div class="card result-card" id="allergenCard" style="display: none;">
+                    <div class="card-header">
+                        <h3>🚨 Allergen Alerts</h3>
+                    </div>
+                    <div class="allergen-alerts" id="allergenAlerts">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
                 
                 <!-- Food Preference Card -->
                 <div class="card result-card">

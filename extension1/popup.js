@@ -159,11 +159,11 @@ async function getCurrentTabUrl() {
     try {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         const url = tab.url;
-        currentUrl.textContent = url;
+        // currentUrl.textContent = url;
         return url;
     } catch (error) {
         console.error('Error getting URL:', error);
-        currentUrl.textContent = 'Error loading URL';
+        // currentUrl.textContent = 'Error loading URL';
         return null;
     }
 }

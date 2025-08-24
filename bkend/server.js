@@ -9,12 +9,16 @@ const app = express();
 const PORT = 3000;
 
 let context = '';
+let userDetals = '';
 
 const API_BASE_URL = 'http://localhost:3000';
 // Middleware
 app.use(cors());
 app.use(express.json());
 require('dotenv').config();
+
+const userRoutes = require("./routes/user");
+app.use("/", userRoutes);
 
 const {
   generateEmbedding,
@@ -200,7 +204,12 @@ app.post('/llm-call', async (req, res) => {
   }
 
   try {
-    const prompt = `Context:\n${context}\n\nQuestion: ${query}\n\nAnswer: 
+    userDetals = await axios.get(
+      `${API_BASE_URL}/api/profiles/68aac71f8768849a549a722a`
+    );
+
+    userDetals = JSON.stringify(userDetals.data);
+    const prompt = `User: ${userDetals}\n\nContext:\n${context}\n\nQuestion: ${query}\n\nAnswer: 
     - STRICTLY MAINTAIN JSON FORMAT 
     - DO NOT ANSWER FOR NON FOOD ITEMS
     - IF YOU DONT GET NUTRITIONAL INFO, UNDERSTAND AND FORM THE NUTRITIONAL INFO BASED ON KNOWLEDGE
