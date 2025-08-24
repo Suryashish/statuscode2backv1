@@ -3,10 +3,12 @@ const cors = require('cors');
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 const app = express();
 const PORT = 3000;
 
+const API_BASE_URL = 'http://localhost:3000';
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -39,9 +41,15 @@ const playwright_function = async (url) => {
         //write the logic
 
         let textContent;
-        if (url.startsWith("https://www.flipkart.com/")) {
+        if (
+          url.startsWith("https://www.flipkart.com/")
+        ) {
+          if (!url.includes("pid=")) {
+            throw new Error("Invalid URL");
+          }
           // Flipkart: scrape parent div with class "DOjaWF YJG4Cf"
           const flipkartSelector = ".DOjaWF.YJG4Cf";
+
           const exists = await page.$(flipkartSelector);
           if (exists) {
             textContent = await page.innerText(flipkartSelector);
@@ -49,13 +57,17 @@ const playwright_function = async (url) => {
             textContent = await page.innerText("body");
           }
         } else if (url.startsWith("https://www.amazon.in/")) {
+            // if (!url.includes("/dp/")) {
+            //   throw new Error("Invalid URL");
+            // }
           // Amazon: scrape parent div with class "ppd"
           const amazonSelector = "#ppd";
           const exists = await page.$(amazonSelector);
           if (exists) {
             textContent = await page.innerText(amazonSelector);
           } else {
-            textContent = await page.innerText("body");
+            // textContent = await page.innerText("body");
+            throw new Error("Invalid URL");
           }
         } else {
           // Default: scrape all visible text from body
@@ -119,6 +131,7 @@ app.post('/parse-website', async (req, res) => {
         const textContent = await playwright_function(url);
         
         console.log('✅ Successfully parsed website');
+        await axios.post(`${API_BASE_URL}/ingest-documents`);
         res.json({ 
             success: true, 
             content: textContent,

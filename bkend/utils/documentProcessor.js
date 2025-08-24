@@ -21,21 +21,23 @@ const processDocument = async (filePath) => {
   try {
     const content = await fs.readFile(filePath, "utf8");
     const chunks = splitTextIntoChunks(content);
-    const vectors = [];
 
-    for (let i = 0; i < chunks.length; i++) {
-      const chunk = chunks[i];
-      const embedding = await generateEmbedding(chunk);
-      vectors.push({
-        id: `${fileName}-${i}`, // Unique ID for each chunk
-        values: embedding,
-        metadata: {
-          filename: fileName,
-          chunk_index: i,
-          text: chunk,
-        },
-      });
-    }
+    // Process embeddings in parallel
+    const vectors = await Promise.all(
+      chunks.map(async (chunk, i) => {
+        const embedding = await generateEmbedding(chunk);
+        return {
+          id: `${fileName}-${i}`,
+          values: embedding,
+          metadata: {
+            filename: fileName,
+            chunk_index: i,
+            text: chunk,
+          },
+        };
+      })
+    );
+
     console.log(
       `Processed document: ${fileName} into ${vectors.length} chunks.`
     );
@@ -45,6 +47,7 @@ const processDocument = async (filePath) => {
     throw error;
   }
 };
+
 
 module.exports = {
   processDocument,

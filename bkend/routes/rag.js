@@ -26,6 +26,7 @@ router.get("/", (req, res) => {
 //   }
 // })
 // Ingest documents endpoint
+
 router.post("/ingest-documents", async (req, res) => {
   const documentsDir = path.join(__dirname, "../documents");
   try {
@@ -58,6 +59,7 @@ router.post("/ingest-documents", async (req, res) => {
 // Query RAG endpoint
 router.post("/query", async (req, res) => {
   const { query } = req.body;
+  // query = ["Is ${product} is healthy for user"]
 
   if (!query) {
     return res.status(400).json({ error: "Query is required." });
@@ -68,7 +70,7 @@ router.post("/query", async (req, res) => {
     const queryEmbedding = await generateEmbedding(query);
 
     // 2. Query Pinecone for relevant document chunks
-    const relevantChunks = await queryPinecone(queryEmbedding, 3); // Get top 3 relevant chunks
+    const relevantChunks = await queryPinecone(queryEmbedding, 1); // Get top 3 relevant chunks
 
     if (relevantChunks.length === 0) {
       return res
@@ -80,8 +82,14 @@ router.post("/query", async (req, res) => {
     }
 
     // 3. Construct the prompt for Gemini with context
-    const context = relevantChunks.map((chunk) => chunk.text).join("\n\n");
-    const prompt = `Based on the following context, answer the question comprehensively. If the information is not in the context, state that you don't know.\n\nContext:\n${context}\n\nQuestion: ${query}\n\nAnswer:`;
+    // const context = relevantChunks.map((chunk) => chunk.text).join("\n\n");
+    // const prompt = `Based on the following context, answer the question comprehensively.
+    // you are an expert nutritionist and 
+    // If the information is not in the context, state that you don't know.\n\nContext:\n${context}\n\nQuestion: ${query}\n\nAnswer:`;
+
+        const context = relevantChunks.map((chunk) => chunk.text).join("\n\n");
+        const prompt = `Give a score between A- B based on the health score and healthy factor of the product. \n\nContext:\n${context}\n\n\nAnswer:`;
+
 
     // 4. Generate answer using Gemini
     const answer = await generateText(prompt);
